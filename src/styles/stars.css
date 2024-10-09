@@ -1,0 +1,25 @@
+/* 별들이 반짝이는 애니메이션 */
+@keyframes starAnimation {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.5);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}
+
+/* 별의 기본 설정 */
+.star {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  animation: starAnimation 2s infinite ease-in-out;
+  opacity: 0.5;
+}

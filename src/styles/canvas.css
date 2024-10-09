@@ -1,0 +1,9 @@
+/* styles/canvas.css */
+.canvas-container {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: 100%;
+  overflow: hidden;
+
+  background-color: black;
+}
