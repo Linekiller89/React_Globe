@@ -1,5 +1,4 @@
 import { Canvas } from "@react-three/fiber";
-// import Earthglobe from "./components/Earthglobe_texture";
 import Earthglobe from "./components/Earthglobe_texture";
 import Stars from "./components/Stars";
 import "./styles/canvas.css";
