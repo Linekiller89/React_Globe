@@ -4,7 +4,7 @@ import { useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { cities } from "../data/cities";
 import { countries } from "../data/countries";
-import { continents, oceans } from "/src/data/continentsOceans.js";
+import { continents, oceans } from "/src/data/continents_Oceans.js";
 
 function EarthProbe() {
   const mesh = useRef();
