@@ -1,0 +1,12 @@
+/* statusPanel.css */
+.status-panel {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+  height: 100px;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border-radius: 8px;
+}

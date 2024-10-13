@@ -5,6 +5,7 @@ import { OrbitControls } from "@react-three/drei";
 import { cities } from "../data/cities";
 import { countries } from "../data/countries";
 import { continents, oceans } from "/src/data/continents_Oceans.js";
+import Pick from "./Pick";
 
 function EarthProbe() {
   const mesh = useRef();
@@ -45,45 +46,29 @@ function EarthProbe() {
 
       {cities.map((city, index) => {
         const [x, y, z] = latLonToXYZ(1.02, city.lat, city.lon);
-        return (
-          <mesh key={index} position={[x, y, z]}>
-            <sphereGeometry args={[0.02, 16, 16]} />
-            <meshBasicMaterial color="red" />
-          </mesh>
-        );
+        return <Pick key={index} targetPosition={[x, y, z]} color="red" />;
       })}
 
       {countries.map((country, index) => {
         const [x, y, z] = latLonToXYZ(1.02, country.lat, country.lon);
-        return (
-          <mesh key={index} position={[x, y, z]}>
-            <sphereGeometry args={[0.02, 16, 16]} />
-            <meshBasicMaterial color="grey" />
-          </mesh>
-        );
+        return <Pick key={index} targetPosition={[x, y, z]} color="grey" />;
       })}
 
       {continents.map((continent, index) => {
         const [x, y, z] = latLonToXYZ(1.02, continent.lat, continent.lon);
-        return (
-          <mesh key={index} position={[x, y, z]}>
-            <sphereGeometry args={[0.02, 16, 16]} />
-            <meshBasicMaterial color="purple" />
-          </mesh>
-        );
+        return <Pick key={index} targetPosition={[x, y, z]} color="purple" />;
       })}
 
       {oceans.map((ocean, index) => {
         const [x, y, z] = latLonToXYZ(1.02, ocean.lat, ocean.lon);
-        return (
-          <mesh key={index} position={[x, y, z]}>
-            <sphereGeometry args={[0.02, 16, 16]} />
-            <meshBasicMaterial color="blue" />
-          </mesh>
-        );
+        return <Pick key={index} targetPosition={[x, y, z]} color="blue" />;
       })}
 
-      <OrbitControls {...orbitcontrolsettings} />
+      <OrbitControls
+        {...orbitcontrolsettings}
+        enableDamping={true}
+        dampingFactor={0.1}
+      />
     </>
   );
 }
