@@ -1,26 +1,18 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { TextureLoader } from "three";
 import { useLoader } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import { cities } from "../data/cities";
 import { countries } from "../data/countries";
 import { continents, oceans } from "/src/data/continents_Oceans.js";
-import Pick from "./Pick";
+import { orbitcontrolsettings } from "/src/data/orbitcontrol.js";
+import { gsap } from "gsap";
 
-function EarthProbe() {
+function Earthglobe_texture() {
   const mesh = useRef();
+  const controlsRef = useRef(); // OrbitControls를 참조하기 위한 useRef
 
   const dayTexture = useLoader(TextureLoader, "/8k_earth_day.jpg");
-
-  const orbitcontrolsettings = {
-    enableZoom: true,
-    enablePan: true,
-    enableRotate: true,
-    autoRotate: true,
-    autoRotateSpeed: 0.5,
-    minDistance: 3,
-    maxDistance: 40,
-  };
 
   // 위도와 경도를 3D 구 표면 좌표로 변환하는 함수
   const latLonToXYZ = (radius, lat, lon) => {
@@ -34,6 +26,28 @@ function EarthProbe() {
     return [x, y, z];
   };
 
+  // 핀 클릭 시 지구본 회전 함수
+  const handlePinClick = (targetPosition) => {
+    if (mesh.current && controlsRef.current) {
+      console.log("Target Position (Before):", targetPosition);
+
+      // gsap을 사용하여 부드럽게 지구본 회전
+      gsap.to(mesh.current.rotation, {
+        x: Math.asin(targetPosition[1] / 1.02),
+        y: -Math.atan2(targetPosition[0], targetPosition[2]),
+        duration: 1.5,
+        onUpdate: () => {
+          controlsRef.current.update(); // 회전이 업데이트될 때마다 컨트롤 업데이트
+        },
+        onComplete: () => {
+          console.log("Camera Position (After):", controlsRef.current.target);
+        },
+      });
+      // 자동 회전 비활성화
+      controlsRef.current.autoRotate = false;
+    }
+  };
+
   return (
     <>
       <ambientLight intensity={2} />
@@ -42,29 +56,26 @@ function EarthProbe() {
       <mesh ref={mesh} position={[0, 0, 0]}>
         <sphereGeometry args={[1, 32, 32]} />
         <meshStandardMaterial map={dayTexture} />
+
+        {[...cities, ...countries, ...continents, ...oceans].map(
+          (location, index) => {
+            const [x, y, z] = latLonToXYZ(1.02, location.lat, location.lon);
+            return (
+              <mesh
+                key={index}
+                position={[x, y, z]}
+                onClick={() => handlePinClick([x, y, z])}
+              >
+                <sphereGeometry args={[0.01, 16, 16]} />
+                <meshStandardMaterial color={location.color || "white"} />
+              </mesh>
+            );
+          }
+        )}
       </mesh>
 
-      {cities.map((city, index) => {
-        const [x, y, z] = latLonToXYZ(1.02, city.lat, city.lon);
-        return <Pick key={index} targetPosition={[x, y, z]} color="red" />;
-      })}
-
-      {countries.map((country, index) => {
-        const [x, y, z] = latLonToXYZ(1.02, country.lat, country.lon);
-        return <Pick key={index} targetPosition={[x, y, z]} color="grey" />;
-      })}
-
-      {continents.map((continent, index) => {
-        const [x, y, z] = latLonToXYZ(1.02, continent.lat, continent.lon);
-        return <Pick key={index} targetPosition={[x, y, z]} color="purple" />;
-      })}
-
-      {oceans.map((ocean, index) => {
-        const [x, y, z] = latLonToXYZ(1.02, ocean.lat, ocean.lon);
-        return <Pick key={index} targetPosition={[x, y, z]} color="blue" />;
-      })}
-
       <OrbitControls
+        ref={controlsRef}
         {...orbitcontrolsettings}
         enableDamping={true}
         dampingFactor={0.1}
@@ -73,4 +84,4 @@ function EarthProbe() {
   );
 }
 
-export default EarthProbe;
+export default Earthglobe_texture;

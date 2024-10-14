@@ -1,24 +1,3 @@
-// Pick.jsx
-import React from "react";
-import { useRef } from "react";
+// 지구본에 특정 영역을 선택하면, 해당 영역의 정보를 가져오는 컴포넌트
+// 해당 영역의 이름, 좌표 등을 가져온다.
 
-function Pick({ targetPosition, color, onPick }) {
-  const meshRef = useRef();
-
-  // 클릭 이벤트 처리 함수
-  const handlePick = (event) => {
-    event.stopPropagation();
-    if (meshRef.current) {
-      onPick(meshRef.current);
-    }
-  };
-
-  return (
-    <mesh ref={meshRef} position={targetPosition} onClick={handlePick}>
-      <sphereGeometry args={[0.02, 16, 16]} />
-      <meshBasicMaterial color={color} />
-    </mesh>
-  );
-}
-
-export default Pick;
